@@ -44,7 +44,8 @@ Content-Type: text/html; charset=UTF-8
 
 ### Имя 60 символов
 ```powershell
-PS C:\Users\almaz> $name60 = "A" * 60                                                                                   PS C:\Users\almaz> curl.exe -i -d "email=student@example.test&topic=php&seats=2&agree=1" --data-urlencode "fullName=$name60" "http://localhost:8088/register"
+PS C:\Users\almaz>$name60 = "A" * 60
+PS C:\Users\almaz> curl.exe -i -d "email=student@example.test&topic=php&seats=2&agree=1" --data-urlencode "fullName=$name60" "http://localhost:8088/register"
 HTTP/1.1 200 OK
 Date: Wed, 07 Oct 2026 12:24:30 GMT
 Server: Apache
@@ -78,34 +79,77 @@ Content-Type: text/html; charset=UTF-8
 <!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><p class="error">Исправьте поля формы</p><form action="/register" method="post"><p>Предпросмотр заявки; сохранения пока нет.</p><label for="fullName">Имя</label><input id="fullName" name="fullName" value="Anna Example"><label for="email">Email</label><input id="email" name="email" value="not-an-email"><p class="error">Укажите корректный email</p><label for="seats">Количество мест (1–5)</label><input id="seats" name="seats" value="2"><label for="topic">Тема</label><select id="topic" name="topic"><option value="">Выберите</option><option value="php" selected>PHP</option><option value="http">HTTP</option></select><label><input type="checkbox" name="agree" value="1" checked> Согласен с обработкой учебной заявки</label><button>Проверить заявку</button></form><p><a href="/">Новая заявка</a></p></html>
 ```
 
-### 
+### topic вне выбранного варианта
 ```powershell
+PS C:\Users\almaz> curl.exe -i -d "email=student@example.test&topic=sql&seats=2&agree=1" --data-urlencode "fullName=Anna Example" "http://localhost:8088/register"
+HTTP/1.1 422 Unprocessable Entity
+Date: Wed, 07 Oct 2026 12:28:57 GMT
+Server: Apache
+Content-Length: 1130
+Content-Type: text/html; charset=UTF-8
 
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><p class="error">Исправьте поля формы</p><form action="/register" method="post"><p>Предпросмотр заявки; сохранения пока нет.</p><label for="fullName">Имя</label><input id="fullName" name="fullName" value="Anna Example"><label for="email">Email</label><input id="email" name="email" value="student@example.test"><label for="seats">Количество мест (1–5)</label><input id="seats" name="seats" value="2"><label for="topic">Тема</label><select id="topic" name="topic"><option value="">Выберите</option><option value="php">PHP</option><option value="http">HTTP</option></select><p class="error">Выберите тему из списка</p><label><input type="checkbox" name="agree" value="1" checked> Согласен с обработкой учебной заявки</label><button>Проверить заявку</button></form><p><a href="/">Новая заявка</a></p></html>
 ```
 
-### 
+### seats=6
 ```powershell
+PS C:\Users\almaz> curl.exe -i -d "email=student@example.test&topic=php&seats=6&agree=1" --data-urlencode "fullName=Anna Example" "http://localhost:8088/register"
+HTTP/1.1 422 Unprocessable Entity
+Date: Wed, 07 Oct 2026 12:30:02 GMT
+Server: Apache
+Content-Length: 1161
+Content-Type: text/html; charset=UTF-8
 
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><p class="error">Исправьте поля формы</p><form action="/register" method="post"><p>Предпросмотр заявки; сохранения пока нет.</p><label for="fullName">Имя</label><input id="fullName" name="fullName" value="Anna Example"><label for="email">Email</label><input id="email" name="email" value="student@example.test"><label for="seats">Количество мест (1–5)</label><input id="seats" name="seats" value="6"><p class="error">Количество мест должно быть от 1 до 5</p><label for="topic">Тема</label><select id="topic" name="topic"><option value="">Выберите</option><option value="php" selected>PHP</option><option value="http">HTTP</option></select><label><input type="checkbox" name="agree" value="1" checked> Согласен с обработкой учебной заявки</label><button>Проверить заявку</button></form><p><a href="/">Новая заявка</a></p></html>
 ```
 
-### 
+### Нет agree
 ```powershell
+PS C:\Users\almaz> curl.exe -i -d "email=student@example.test&topic=php&seats=2" --data-urlencode "fullName=Anna Example" "http://localhost:8088/register"
+HTTP/1.1 422 Unprocessable Entity
+Date: Wed, 07 Oct 2026 12:31:13 GMT
+Server: Apache
+Content-Length: 1147
+Content-Type: text/html; charset=UTF-8
 
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><p class="error">Исправьте поля формы</p><form action="/register" method="post"><p>Предпросмотр заявки; сохранения пока нет.</p><label for="fullName">Имя</label><input id="fullName" name="fullName" value="Anna Example"><label for="email">Email</label><input id="email" name="email" value="student@example.test"><label for="seats">Количество мест (1–5)</label><input id="seats" name="seats" value="2"><label for="topic">Тема</label><select id="topic" name="topic"><option value="">Выберите</option><option value="php" selected>PHP</option><option value="http">HTTP</option></select><label><input type="checkbox" name="agree" value="1"> Согласен с обработкой учебной заявки</label><p class="error">Необходимо согласие с условиями</p><button>Проверить заявку</button></form><p><a href="/">Новая заявка</a></p></html>
 ```
 
-### 
+### Несколько ошибок
 ```powershell
+PS C:\Users\almaz> curl.exe -i -d "email=bad-email&topic=php&seats=2" --data-urlencode "fullName=   " "http://localhost:8088/register"
+HTTP/1.1 422 Unprocessable Entity
+Date: Wed, 07 Oct 2026 12:35:29 GMT
+Server: Apache
+Content-Length: 1277
+Content-Type: text/html; charset=UTF-8
 
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><p class="error">Исправьте поля формы</p><form action="/register" method="post"><p>Предпросмотр заявки; сохранения пока нет.</p><label for="fullName">Имя</label><input id="fullName" name="fullName" value=""><p class="error">Имя должно содержать от 2 до 60 символов</p><label for="email">Email</label><input id="email" name="email" value="bad-email"><p class="error">Укажите корректный email</p><label for="seats">Количество мест (1–5)</label><input id="seats" name="seats" value="2"><label for="topic">Тема</label><select id="topic" name="topic"><option value="">Выберите</option><option value="php" selected>PHP</option><option value="http">HTTP</option></select><label><input type="checkbox" name="agree" value="1"> Согласен с обработкой учебной заявки</label><p class="error">Необходимо согласие с условиями</p><button>Проверить заявку</button></form><p><a href="/">Новая заявка</a></p></html>
 ```
 
-### 
+### Имя с тегами и амперсандом
 ```powershell
+PS C:\Users\almaz> curl.exe -i -d "email=student@example.test&topic=php&seats=2&agree=1" --data-urlencode "fullName=<b>нна & лья</b>" "http://localhost:8088/register"
+HTTP/1.1 200 OK
+Date: Wed, 07 Oct 2026 12:33:43 GMT
+Server: Apache
+Content-Length: 528
+Content-Type: text/html; charset=UTF-8
 
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><h2>Предпросмотр подтверждён</h2><p>Имя: &lt;b&gt;нна &amp; лья&lt;/b&gt;</p><p>Email: student@example.test</p><p>Тема: PHP</p><p>Мест: 2</p><p>Заявка не сохранена; повторная отправка только повторяет проверку.</p><p><a href="/">Новая заявка</a></p></html>
 ```
 
-### 
+### GET к register
 ```powershell
+PS C:\Users\almaz> curl.exe -i "http://localhost:8088/register"
+HTTP/1.1 405 Method Not Allowed
+Date: Wed, 07 Oct 2026 12:34:40 GMT
+Server: Apache
+Allow: POST
+Content-Length: 256
+Content-Type: text/html; charset=UTF-8
 
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Форма заявки</title><link rel="stylesheet" href="/style.css"><h1>Форма заявки</h1><p>Метод не разрешён</p><p><a href="/">Новая заявка</a></p></html>
 ```
 
 
